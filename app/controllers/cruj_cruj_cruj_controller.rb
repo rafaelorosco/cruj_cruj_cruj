@@ -19,7 +19,8 @@ class CrujCrujCrujController < ApplicationController
 
   def find_all_resources
     @q = model_class.ransack(params[:q])
-    @resources = @q.result.page(params[:page])
+    @q.sorts = default_sort if @q.sorts.empty?
+    @resources = @q.result(distinct: true).page(params[:page])
   end
 
   def namespace_url
@@ -56,6 +57,10 @@ class CrujCrujCrujController < ApplicationController
 
   def index_filter_attributes
     index_attributes.map { |ia| filter_for(ia) }
+  end
+
+  def default_sort
+    index_filter_attributes.map { |ifa| ifa.is_a?(Array) ? "#{ifa[0].split('_')[0..-2].join("_")} asc" : "#{ifa.split('_')[0..-2].join("_")} asc" }
   end
 
   def exclude_index_filter_attributes
