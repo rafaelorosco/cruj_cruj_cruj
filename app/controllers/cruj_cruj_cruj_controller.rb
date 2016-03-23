@@ -64,8 +64,12 @@ class CrujCrujCrujController < ApplicationController
     model_class.reflect_on_all_associations(association).reject { |value| value.options.key?(:through) }.map(&:name)
   end
 
-  def format_field(field)
-    send("format_field_#{field.class.name.downcase}", field)
+  def format_field(field, possible_values)
+    if possible_values.blank?
+      send("format_field_#{field.class.name.downcase}", field)
+    else
+      possible_values[send("format_field_#{field.class.name.downcase}", field)]
+    end
   rescue
     field.name
   end
@@ -86,15 +90,16 @@ class CrujCrujCrujController < ApplicationController
     t(:false_field)
   end
 
-  def filter_for(ia)
-    column = model_class.columns_hash[ia]
-    if column
-      send("filter_for_#{column.type}", ia)
+  def filter_for(attribute)
+    if attribute.is_a? Array
+      send("filter_for_enum", attribute[0], attribute[1])
+    elsif column = model_class.columns_hash[attribute.to_s]
+      send("filter_for_#{column.type}", attribute)
     else
-      send("filter_for_#{ia}")
+      send("filter_for_#{attribute}")
     end
   rescue
-    "#{ia}_cont"
+    "#{attribute}_cont"
   end
 
   def filter_for_boolean(attribute)
@@ -127,5 +132,9 @@ class CrujCrujCrujController < ApplicationController
 
   def filter_for_custom_field
     "custom_field_name_cont"
+  end
+
+  def filter_for_enum(attribute, values)
+    ["#{attribute}_eq", values]
   end
 end

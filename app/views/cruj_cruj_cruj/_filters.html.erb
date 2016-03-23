@@ -1,21 +1,32 @@
 <%= search_form_for @q do |f| %>
-  <fieldset>
-    <% index_filter_attributes.each do |filter_attributes| %>
-      <% unless exclude_index_filter_attributes.find { |eifa| filter_attributes =~ /#{eifa}/ } %>
-      <div class="field">
-        <label> <b><%= f.label filter_attributes %>:</b></label><br />
-        <% if filter_attributes =~ /true/ %>
-          <%= f.select filter_attributes, [[t(:true_field), 1], [t(:false_field), 0]], { include_blank: t(:all_field), selected: params[:q] ? params[:q][filter_attributes] : '' } %>
-        <% elsif filter_attributes =~ /cont/ %>
-          <%= f.search_field filter_attributes %>
-        <% else %>
-          <%= render "#{filter_attributes}_filter" %>
-        <% end %><br /><br />
+  <fieldset style="display:table;border-spacing:10px;">
+    <% index_filter_attributes
+            .reject { |filter_attribute| exclude_index_filter_attributes.find { |eifa| (filter_attribute.is_a?(Array) ? filter_attribute[0] : filter_attribute ) =~ /#{eifa}/ } }
+            .in_groups_of(5, false).each do |filter_attributes| %>
+      <div class="fields" style="display:table-row">
+
+        <% filter_attributes.each do |filter_attribute| %>
+          <div class="field" style="display:table-cell">
+            <% attribute_name   = filter_attribute.is_a?(Array) ? filter_attribute[0] : filter_attribute %>
+            <% attribute_values = filter_attribute.is_a?(Array) ? filter_attribute[1] : [] %>
+
+            <label> <b><%= t(attribute_name) %>:</b></label><br />
+            <% if !attribute_values.blank? %>
+              <%= f.select attribute_name, attribute_values.map { |k,v| [v,k] }, { include_blank: t(:all_field), selected: params[:q] ? params[:q][attribute_name] : '' } %>
+            <% elsif attribute_name =~ /true/ %>
+              <%= f.select attribute_name, [[t(:true_field), 1], [t(:false_field), 0]], { include_blank: t(:all_field), selected: params[:q] ? params[:q][attribute_name] : '' } %>
+            <% elsif attribute_name =~ /cont/ %>
+              <%= f.search_field attribute_name %>
+            <% else %>
+              <%= render "#{attribute_name}_filter" %>
+            <% end %>
+            <br /><br />
+          </div>
+        <% end %>
+        <br /><br />
       </div>
-      <% end %>
     <% end %>
 
     <%= f.submit %>
   </fieldset>
-
 <% end %>

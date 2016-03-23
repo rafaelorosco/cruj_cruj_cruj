@@ -6,7 +6,7 @@
           <% index_attributes.each do |index_attribute| %>
             <% unless exclude_index_attributes.find { |eia| index_attribute =~ /#{eia}/ } %>
               <th>
-                <%= l("label_#{index_attribute}") %>
+                <%= l("label_#{index_attribute.is_a?(Array) ? index_attribute[0] : index_attribute}") %>
               </th>
             <% end %>
           <% end %>
@@ -17,9 +17,12 @@
         <% @resources.each do |resource| %>
           <tr>
             <% index_attributes.each do |index_attribute| %>
-              <% unless exclude_index_attributes.select { |eia| index_attribute =~ /#{eia}/ }.first %>
+              <% attribute_name = index_attribute.is_a?(Array)   ? index_attribute[0] : index_attribute %>
+              <% attribute_values = index_attribute.is_a?(Array) ? index_attribute[1] : [] %>
+
+              <% unless exclude_index_attributes.select { |eia| attribute_name =~ /#{eia}/ }.first %>
                 <td>
-                  <%= format_field resource.send(index_attribute) %>
+                  <%= format_field(resource.send(attribute_name), attribute_values) %>
                 </td>
               <% end %>
             <% end %>
@@ -35,6 +38,6 @@
 
     <br />
   <% else %>
-    <h3> <%= l(:no_resource_message)%> </h1>
+    <h3> <%= l("no_#{snake_case_model_name}_message")%> </h1>
   <% end %>
 </div>
