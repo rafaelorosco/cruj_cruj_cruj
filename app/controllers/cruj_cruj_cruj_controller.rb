@@ -1,4 +1,6 @@
 class CrujCrujCrujController < ApplicationController
+  include ActionView::Helpers::NumberHelper
+
   before_action :before_index, only: [:index]
   before_action :find_all_resources, only: [:index]
 
@@ -88,6 +90,10 @@ class CrujCrujCrujController < ApplicationController
 
   def format_field_falseclass(field)
     t(:false_field)
+  end
+
+  def format_field_fixnum(field)
+    number_with_delimiter(field)
   end
 
   def filter_for(attribute)
