@@ -19,7 +19,7 @@ class CrujCrujCrujController < ApplicationController
 
   def find_all_resources
     @q = model_class.ransack(params[:q])
-    @q.sorts = default_sort if @q.sorts.empty?
+    @q.sorts = default_sort if @q.sorts.blank?
     @resources = @q.result(distinct: true).page(params[:page])
   end
 
@@ -44,7 +44,7 @@ class CrujCrujCrujController < ApplicationController
   end
 
   def resource_url(resource)
-    @resource_url ||= namespace_url + [resource]
+    namespace_url + [resource] + [ resource.respond_to?(:type) ? {"type" => resource.type} : {} ]
   end
 
   def index_attributes
@@ -133,6 +133,10 @@ class CrujCrujCrujController < ApplicationController
     "status_name_cont"
   end
 
+  def filter_for_issue_status
+    "issue_status_name_cont"
+  end
+
   def filter_for_status_to
     "status_to_name_cont"
   end
@@ -143,6 +147,14 @@ class CrujCrujCrujController < ApplicationController
 
   def filter_for_custom_field
     "custom_field_name_cont"
+  end
+
+  def filter_for_author
+    "author_firstname_or_author_lastname_cont"
+  end
+
+  def filter_for_principal
+    "principal_firstname_or_principal_lastname_cont"
   end
 
   def filter_for_enum(attribute, values)

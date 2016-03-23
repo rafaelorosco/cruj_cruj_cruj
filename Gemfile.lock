@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    cruj_cruj_cruj (0.0.3)
+    cruj_cruj_cruj (0.0.4)
       kaminari
       rails (> 4.2)
       ransack

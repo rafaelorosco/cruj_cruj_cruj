@@ -2,13 +2,21 @@ pt-BR:
   true_field: Sim
   false_field: Não
   all_field: Todos
+  label_principal: 'Atribuído para'
+  label_issue_status: 'Status'
+  label_type: Tipo
+
   project_name_cont: Nome do projeto contém
   tracker_name_cont: Nome do tipo da tarefa contém
   custom_field_name_cont: Nome do campo customizado contém
   group_lastname_cont:   Nome do grupo contém
+  issue_status_name_cont: Nome do status de contém
   status_to_name_cont: Nome do status de contém
   status_from_name_cont: Nome do status para contém
   custom_field_value_cont: Valor do campo customizado contém
+  principal_firstname_or_principal_lastname_cont: 'Atribuído para contém'
+  type_cont: Tipo contém
+
   ransack:
     search: "pesquisar"
     predicate: "predicado"
