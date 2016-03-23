@@ -1,0 +1,40 @@
+<div style="clear: both;">
+  <%if !@resources.empty? %>
+    <div class="autoscroll">
+      <table class="list resources">
+        <tr>
+          <% index_attributes.each do |index_attribute| %>
+            <% unless exclude_index_attributes.find { |eia| index_attribute =~ /#{eia}/ } %>
+              <th>
+                <%= l("label_#{index_attribute}") %>
+              </th>
+            <% end %>
+          <% end %>
+          <th></th>
+          <th></th>
+        </tr>
+
+        <% @resources.each do |resource| %>
+          <tr>
+            <% index_attributes.each do |index_attribute| %>
+              <% unless exclude_index_attributes.select { |eia| index_attribute =~ /#{eia}/ }.first %>
+                <td>
+                  <%= format_field resource.send(index_attribute) %>
+                </td>
+              <% end %>
+            <% end %>
+
+            <td><%= link_to l(:button_edit)  , url_for([:edit] | resource_url(resource)) %></td>
+            <td><%= link_to l(:button_delete), url_for(resource_url(resource)), confirm: l(:access_delete_confirmation_message), method: :delete %></td>
+          </tr>
+        <% end %>
+      </table>
+    </div>
+
+    <%= paginate @resources %>
+
+    <br />
+  <% else %>
+    <h3> <%= l(:no_resource_message)%> </h1>
+  <% end %>
+</div>

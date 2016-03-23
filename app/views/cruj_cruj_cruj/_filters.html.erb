@@ -1,0 +1,21 @@
+<%= search_form_for @q do |f| %>
+  <fieldset>
+    <% index_filter_attributes.each do |filter_attributes| %>
+      <% unless exclude_index_filter_attributes.find { |eifa| filter_attributes =~ /#{eifa}/ } %>
+      <div class="field">
+        <label> <b><%= f.label filter_attributes %>:</b></label><br />
+        <% if filter_attributes =~ /true/ %>
+          <%= f.select filter_attributes, [[t(:true_field), 1], [t(:false_field), 0]], { include_blank: t(:all_field), selected: params[:q] ? params[:q][filter_attributes] : '' } %>
+        <% elsif filter_attributes =~ /cont/ %>
+          <%= f.search_field filter_attributes %>
+        <% else %>
+          <%= render "#{filter_attributes}_filter" %>
+        <% end %><br /><br />
+      </div>
+      <% end %>
+    <% end %>
+
+    <%= f.submit %>
+  </fieldset>
+
+<% end %>
