@@ -101,6 +101,10 @@ class CrujCrujCrujController < ApplicationController
     number_with_delimiter(field)
   end
 
+  def format_field_float(field)
+    number_with_precision(field)
+  end
+
   def filter_for(attribute)
     if attribute.is_a? Array
       send("filter_for_enum", attribute[0], attribute[1])
