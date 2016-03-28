@@ -1,0 +1,16 @@
+<div>
+  <div style="float: left;">
+    <%= link_to l("link_to_new_#{snake_case_model_name}"), url_for(action: :new, controller: params[:controller]) %>
+  </div>
+
+  <div style="float: right;">
+    <%= form_tag url_for(action: :export_template, controller: params[:controller], q: params[:q]), style: 'margin-right: 10px' do %>
+      <%= submit_tag l(:export_template_label) %>
+    <% end %>
+
+    <%= form_tag url_for(action: :import, controller: params[:controller]), multipart: true do %>
+      <%= file_field_tag :file %>
+      <%= submit_tag l(:import_template_label) %>
+    <% end %>
+    </div>
+</div>

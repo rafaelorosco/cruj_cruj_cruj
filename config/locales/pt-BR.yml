@@ -17,6 +17,9 @@ pt-BR:
   principal_firstname_or_principal_lastname_cont: 'Atribuído para contém'
   type_cont: Tipo contém
 
+  export_template_label: "Exportar Template"
+  import_template_label: "Importar Template"
+
   ransack:
     search: "pesquisar"
     predicate: "predicado"

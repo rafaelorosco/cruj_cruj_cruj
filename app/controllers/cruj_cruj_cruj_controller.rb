@@ -13,6 +13,29 @@ class CrujCrujCrujController < ApplicationController
 
   def index; end
 
+  def import
+    if params[:file].blank?
+      redirect_to atribuicao_automaticas_url, {flash: {error: l(:no_file_to_import_error_message)}}
+      return
+    end
+
+    errors = CrujCrujCruj::Services::ImportRules.import(params[:file], form_fields, model_class)
+
+    if errors.blank?
+      redirect_to url_for(action: :index, controller: params[:controller]), notice: l(:import_success_message)
+      return
+    end
+    redirect_to atribuicao_automaticas_url, flash: { import_errors: errors.join('<br />') }
+  end
+
+  def export_template
+    @q = model_class.ransack(params[:q])
+    @q.sorts = default_sort if @q.sorts.blank?
+
+    filename = CrujCrujCruj::Services::ImportRules.export_template(form_fields, @q.result(distinct: true))
+    send_file(filename, filename: l(:export_template_filename), type: "application/vnd.ms-excel")
+  end
+
   protected
 
   def before_index; end
@@ -21,6 +44,10 @@ class CrujCrujCrujController < ApplicationController
     @q = model_class.ransack(params[:q])
     @q.sorts = default_sort if @q.sorts.blank?
     @resources = @q.result(distinct: true).page(params[:page])
+  end
+
+  def form_fields
+    []
   end
 
   def namespace_url

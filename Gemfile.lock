@@ -1,10 +1,12 @@
 PATH
   remote: .
   specs:
-    cruj_cruj_cruj (0.0.5)
+    cruj_cruj_cruj (0.0.6)
+      axlsx (~> 2.0)
       kaminari
       rails (> 4.2)
       ransack
+      roo
 
 GEM
   remote: https://rubygems.org/
@@ -45,11 +47,16 @@ GEM
       thread_safe (~> 0.3, >= 0.3.4)
       tzinfo (~> 1.1)
     arel (6.0.3)
+    axlsx (2.0.1)
+      htmlentities (~> 4.3.1)
+      nokogiri (>= 1.4.1)
+      rubyzip (~> 1.0.0)
     builder (3.2.2)
     concurrent-ruby (1.0.1)
     erubis (2.7.0)
     globalid (0.3.6)
       activesupport (>= 4.1.0)
+    htmlentities (4.3.4)
     i18n (0.7.0)
     json (1.8.3)
     kaminari (0.16.3)
@@ -95,13 +102,21 @@ GEM
       activesupport (= 4.2.5.2)
       rake (>= 0.8.7)
       thor (>= 0.18.1, < 2.0)
-    rake (11.1.1)
+    rake (11.1.2)
     ransack (1.7.0)
       actionpack (>= 3.0)
       activerecord (>= 3.0)
       activesupport (>= 3.0)
       i18n
       polyamorous (~> 1.2)
+    roo (1.13.2)
+      nokogiri
+      rubyzip
+      spreadsheet (> 0.6.4)
+    ruby-ole (1.2.12)
+    rubyzip (1.0.0)
+    spreadsheet (1.1.1)
+      ruby-ole (>= 1.0)
     sprockets (3.5.2)
       concurrent-ruby (~> 1.0)
       rack (> 1, < 3)
