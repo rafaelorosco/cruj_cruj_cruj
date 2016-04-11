@@ -1,8 +1,16 @@
 class CrujCrujCrujController < ApplicationController
   include ActionView::Helpers::NumberHelper
 
-  before_action :before_index, only: [:index]
+  before_action :before_index , only: [:index]
+  before_action :before_new   , only: [:new]
+  before_action :before_create, only: [:create]
+  before_action :before_edit  , only: [:edit]
+  before_action :before_update, only: [:update]
+  before_action :before_destroy, only: [:destroy]
+
   before_action :find_all_resources, only: [:index]
+  before_action :build_resource    , only: [:new, :create]
+  before_action :find_resource     , only: [:edit, :update, :destroy]
 
   helper_method :namespace_url, :namespaces, :model_class, :snake_case_model_name,
                 :resource_url,
@@ -12,6 +20,40 @@ class CrujCrujCrujController < ApplicationController
                 :filter_for
 
   def index; end
+  def new; end
+
+  def create
+    if @resource.save
+      redirect_to(action: :index, notice: l("#{snake_case_model_name}_create_success_message"))
+    else
+      render action: 'new'
+    end
+  end
+
+  def edit; end
+
+  def update
+    if @resource.update_attributes(params[snake_case_model_name])
+      redirect_to(action: :index, notice: l("#{snake_case_model_name}_edit_success_message"))
+    else
+      render action: 'edit'
+    end
+  rescue ActiveRecord::RecordNotFound
+    render_404
+  end
+
+  def destroy
+    @resource.destroy
+    redirect_to action: :index, notice: l("#{snake_case_model_name}_delete_success_message")
+  end
+
+  def export_template
+    @q = model_class.ransack(params[:q])
+    @q.sorts = default_sort if @q.sorts.blank?
+
+    filename = CrujCrujCruj::Services::ImportRules.export_template(form_fields, @q.result)
+    send_file(filename, filename: l(:export_template_filename), type: "application/vnd.ms-excel")
+  end
 
   def import
     if params[:file].blank?
@@ -28,22 +70,29 @@ class CrujCrujCrujController < ApplicationController
     redirect_to atribuicao_automaticas_url, flash: { import_errors: errors.join('<br />') }
   end
 
-  def export_template
-    @q = model_class.ransack(params[:q])
-    @q.sorts = default_sort if @q.sorts.blank?
-
-    filename = CrujCrujCruj::Services::ImportRules.export_template(form_fields, @q.result(distinct: true))
-    send_file(filename, filename: l(:export_template_filename), type: "application/vnd.ms-excel")
-  end
-
   protected
 
   def before_index; end
+  def before_new; end
+  def before_create; end
+  def before_edit; end
+  def before_update; end
+  def before_destroy; end
 
   def find_all_resources
     @q = model_class.ransack(params[:q])
     @q.sorts = default_sort if @q.sorts.blank?
-    @resources = @q.result(distinct: true).page(params[:page])
+    @resources = @q.result.page(params[:page])
+  end
+
+  def build_resource
+    @resource = model_class.new(params[snake_case_model_name])
+  end
+
+  def find_resource
+    @resource = model_class.find(params[:id])
+  rescue ActiveRecord::RecordNotFound
+    render_404
   end
 
   def form_fields
