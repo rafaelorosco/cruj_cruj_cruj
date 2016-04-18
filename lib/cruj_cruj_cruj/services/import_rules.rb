@@ -130,7 +130,7 @@ module CrujCrujCruj
 
       def self.validate_in_array(col, array, spreadsheet)
         (2..spreadsheet.last_row)
-          .map { |i| { i => (spreadsheet.row(i)[col].blank? || array.map(&:downcase).include?(spreadsheet.row(i)[col].downcase)) } }
+          .map { |i| { i => (spreadsheet.row(i)[col].blank? || array.map(&:to_s).map(&:downcase).include?(spreadsheet.row(i)[col].to_s.downcase)) } }
           .select { |e| !e.values.first }
           .map { |e| e.keys.first }
       end

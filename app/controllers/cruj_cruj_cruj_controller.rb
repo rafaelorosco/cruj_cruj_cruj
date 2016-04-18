@@ -237,6 +237,10 @@ class CrujCrujCrujController < ApplicationController
     "principal_firstname_or_principal_lastname_cont"
   end
 
+  def filter_for_role
+    "role_name_cont"
+  end
+
   def filter_for_enum(attribute, values)
     ["#{attribute}_eq", values]
   end
