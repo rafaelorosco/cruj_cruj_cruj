@@ -57,7 +57,7 @@ class CrujCrujCrujController < ApplicationController
 
   def import
     if params[:file].blank?
-      redirect_to atribuicao_automaticas_url, {flash: {error: l(:no_file_to_import_error_message)}}
+      redirect_to url_for(action: :index, controller: params[:controller]), {flash: {error: l(:no_file_to_import_error_message)}}
       return
     end
 
@@ -67,7 +67,7 @@ class CrujCrujCrujController < ApplicationController
       redirect_to url_for(action: :index, controller: params[:controller]), notice: l(:import_success_message)
       return
     end
-    redirect_to atribuicao_automaticas_url, flash: { import_errors: errors.join('<br />') }
+    redirect_to url_for(action: :index, controller: params[:controller]), flash: { import_errors: errors.join('<br />') }
   end
 
   protected
