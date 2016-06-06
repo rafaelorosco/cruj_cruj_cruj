@@ -1,16 +1,16 @@
 class CrujCrujCrujController < ApplicationController
   include ActionView::Helpers::NumberHelper
 
-  before_action :before_index , only: [:index]
-  before_action :before_new   , only: [:new]
-  before_action :before_create, only: [:create]
-  before_action :before_edit  , only: [:edit]
-  before_action :before_update, only: [:update]
-  before_action :before_destroy, only: [:destroy]
+  before_filter :before_index , only: [:index]
+  before_filter :before_new   , only: [:new]
+  before_filter :before_create, only: [:create]
+  before_filter :before_edit  , only: [:edit]
+  before_filter :before_update, only: [:update]
+  before_filter :before_destroy, only: [:destroy]
 
-  before_action :find_all_resources, only: [:index]
-  before_action :build_resource    , only: [:new, :create]
-  before_action :find_resource     , only: [:edit, :update, :destroy]
+  before_filter :find_all_resources, only: [:index]
+  before_filter :build_resource    , only: [:new, :create]
+  before_filter :find_resource     , only: [:edit, :update, :destroy]
 
   helper_method :namespace_url, :namespaces, :model_class, :snake_case_model_name,
                 :resource_url,
