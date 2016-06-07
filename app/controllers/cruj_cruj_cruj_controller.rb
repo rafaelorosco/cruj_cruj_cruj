@@ -120,7 +120,11 @@ class CrujCrujCrujController < ApplicationController
   end
 
   def resource_url(resource)
-    namespace_url + [resource] + [ resource.respond_to?(:type) ? {"type" => resource.type} : {} ]
+    if Rails::VERSION::MAJOR >= 4
+      namespace_url + [resource] + [ resource.respond_to?(:type) ? {"type" => resource.type} : {} ]
+    else
+      namespace_url + [resource]
+    end
   end
 
   def index_attributes
